@@ -25,7 +25,7 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:4200", "https://yourusername.github.io")
+        policy.WithOrigins("http://localhost:4200", "https://isha1510-test.github.io")
               .AllowAnyHeader()
               .AllowAnyMethod()
               .AllowCredentials();
