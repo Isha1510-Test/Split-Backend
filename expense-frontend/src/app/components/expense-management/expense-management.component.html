@@ -1,0 +1,182 @@
+<div class="expense-management">
+  <div class="header">
+    <h2>💰 Expenses - {{selectedGroup?.name}}</h2>
+    <button class="btn-primary" 
+            (click)="showCreateForm = !showCreateForm"
+            [disabled]="!selectedGroup || !currentUser">
+      {{ showCreateForm ? 'Cancel' : '+ Add Expense' }}
+    </button>
+  </div>
+
+  <!-- Create Expense Form -->
+  <div class="create-form" *ngIf="showCreateForm">
+    <h3>Add New Expense</h3>
+    <form (ngSubmit)="createExpense()" #expenseForm="ngForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="description">Description</label>
+          <input 
+            type="text" 
+            id="description"
+            [(ngModel)]="newExpense.description" 
+            name="description"
+            required
+            placeholder="What was this expense for?">
+        </div>
+        
+        <div class="form-group">
+          <label for="amount">Amount ($)</label>
+          <input 
+            type="number" 
+            id="amount"
+            [(ngModel)]="newExpense.amount" 
+            name="amount"
+            required
+            min="0.01"
+            step="0.01"
+            (ngModelChange)="onAmountChange()"
+            placeholder="0.00">
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="paidBy">Paid By</label>
+          <select 
+            id="paidBy"
+            [(ngModel)]="newExpense.paidById" 
+            name="paidBy"
+            required>
+            <option *ngFor="let member of selectedGroup?.members" [value]="member.id">
+              {{member.name}}
+            </option>
+          </select>
+        </div>
+        
+        <div class="form-group">
+          <label for="splitType">Split Type</label>
+          <select 
+            id="splitType"
+            [(ngModel)]="newExpense.splitType" 
+            name="splitType"
+            required
+            (ngModelChange)="onSplitTypeChange()">
+            <option *ngFor="let type of splitTypes" [value]="type">
+              {{getSplitTypeLabel(type)}}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Split Details -->
+      <div class="splits-section" *ngIf="newExpense.splits.length > 0">
+        <h4>Split Details</h4>
+        <div class="splits-grid">
+          <div class="split-item" *ngFor="let split of newExpense.splits; let i = index">
+            <div class="split-user">{{split.userName}}</div>
+            
+            <div class="split-amount" *ngIf="newExpense.splitType === 'EXACT'">
+              <input 
+                type="number" 
+                [(ngModel)]="split.amount" 
+                [name]="'amount_' + i"
+                min="0"
+                step="0.01"
+                placeholder="Amount">
+            </div>
+            
+            <div class="split-percentage" *ngIf="newExpense.splitType === 'PERCENTAGE'">
+              <input 
+                type="number" 
+                [(ngModel)]="split.percentage" 
+                [name]="'percentage_' + i"
+                min="0"
+                max="100"
+                step="0.01"
+                (ngModelChange)="calculatePercentageSplits()"
+                placeholder="Percentage">
+              <span>%</span>
+            </div>
+            
+            <div class="split-display" *ngIf="newExpense.splitType === 'EQUAL'">
+              ${{split.amount | number:'1.2-2'}}
+            </div>
+          </div>
+        </div>
+        
+        <div class="split-validation" *ngIf="newExpense.splitType !== 'EQUAL'">
+          <div class="validation-message" 
+               [class.error]="!validateSplits()"
+               [class.success]="validateSplits()">
+            <span *ngIf="newExpense.splitType === 'EXACT'">
+              Total: ${{getTotalSplitAmount() | number:'1.2-2'}} 
+              / ${{newExpense.amount | number:'1.2-2'}}
+            </span>
+            <span *ngIf="newExpense.splitType === 'PERCENTAGE'">
+              Total: {{getTotalSplitPercentage() | number:'1.2-2'}}%
+            </span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="submit" 
+                class="btn-primary" 
+                [disabled]="!expenseForm.form.valid || !validateSplits()">
+          Add Expense
+        </button>
+        <button type="button" class="btn-secondary" (click)="resetForm()">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Expenses List -->
+  <div class="expenses-section">
+    <div *ngIf="loading" class="loading">
+      <p>Loading expenses...</p>
+    </div>
+
+    <div *ngIf="!loading && expenses.length === 0" class="no-expenses">
+      <p>No expenses found. Add the first expense to get started!</p>
+    </div>
+
+    <div class="expenses-list" *ngIf="!loading && expenses.length > 0">
+      <div class="expense-card" *ngFor="let expense of expenses">
+        <div class="expense-header">
+          <h4>{{expense.description}}</h4>
+          <div class="expense-amount">${{expense.amount | number:'1.2-2'}}</div>
+        </div>
+        
+        <div class="expense-details">
+          <div class="expense-info">
+            <span class="paid-by">Paid by: {{expense.paidByName}}</span>
+            <span class="split-type">{{getSplitTypeLabel(expense.splitType)}}</span>
+          </div>
+          
+          <div class="expense-splits" *ngIf="expense.splits && expense.splits.length > 0">
+            <h5>Split Details:</h5>
+            <div class="splits-list">
+              <div class="split-detail" *ngFor="let split of expense.splits">
+                <span class="split-user">{{split.userName}}</span>
+                <span class="split-amount">${{split.amount | number:'1.2-2'}}</span>
+                <span class="split-percentage" *ngIf="split.percentage">
+                  ({{split.percentage | number:'1.1-1'}}%)
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="expense-actions">
+          <button class="btn-delete" 
+                  (click)="deleteExpense(expense)"
+                  *ngIf="expense.paidById === currentUser?.id">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

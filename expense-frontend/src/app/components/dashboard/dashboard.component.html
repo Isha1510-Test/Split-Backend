@@ -1,0 +1,65 @@
+<div class="dashboard">
+  <h2>📊 Dashboard</h2>
+  
+  <div *ngIf="!currentUser" class="no-user">
+    <p>Please select a user to view dashboard</p>
+  </div>
+
+  <div *ngIf="currentUser && loading" class="loading">
+    <p>Loading your groups...</p>
+  </div>
+
+  <div *ngIf="currentUser && !loading" class="dashboard-content">
+    <div class="summary-cards">
+      <div class="summary-card">
+        <h3>Total Groups</h3>
+        <div class="card-value">{{userGroups.length}}</div>
+      </div>
+      
+      <div class="summary-card">
+        <h3>Total Balance</h3>
+        <div class="card-value" 
+             [class]="getBalanceClass(getTotalBalance())">
+          ${{getTotalBalance() | number:'1.2-2'}}
+        </div>
+      </div>
+    </div>
+
+    <div class="groups-section">
+      <h3>Your Groups</h3>
+      
+      <div *ngIf="userGroups.length === 0" class="no-groups">
+        <p>You're not part of any groups yet. Create or join a group to get started!</p>
+      </div>
+
+      <div class="groups-grid" *ngIf="userGroups.length > 0">
+        <div class="group-card" 
+             *ngFor="let group of userGroups"
+             (click)="selectGroup(group)">
+          <div class="group-header">
+            <h4>{{group.name}}</h4>
+            <span class="member-count">{{group.members?.length || 0}} members</span>
+          </div>
+          
+          <div class="group-description" *ngIf="group.description">
+            {{group.description}}
+          </div>
+          
+          <div class="group-balance" *ngIf="groupBalances[group.id!]">
+            <span class="balance-label">Your balance:</span>
+            <span class="balance-amount" 
+                  [class]="getBalanceClass(groupBalances[group.id!].netBalance)">
+              ${{groupBalances[group.id!].netBalance | number:'1.2-2'}}
+            </span>
+          </div>
+          
+          <div class="group-actions">
+            <button class="btn-primary" (click)="selectGroup(group); $event.stopPropagation()">
+              View Details
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

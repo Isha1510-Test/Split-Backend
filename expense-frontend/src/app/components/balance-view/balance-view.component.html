@@ -1,0 +1,144 @@
+<div class="balance-view">
+  <div class="header">
+    <h2>⚖️ Balances - {{selectedGroup?.name}}</h2>
+    <button class="btn-refresh" (click)="loadBalances()">
+      🔄 Refresh
+    </button>
+  </div>
+
+  <!-- Tab Navigation -->
+  <div class="tab-navigation">
+    <button class="tab-button" 
+            [class.active]="activeTab === 'balances'"
+            (click)="setActiveTab('balances')">
+      Individual Balances
+    </button>
+    <button class="tab-button" 
+            [class.active]="activeTab === 'settlements'"
+            (click)="setActiveTab('settlements')">
+      Suggested Settlements
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="loading">
+    <p>Loading balances...</p>
+  </div>
+
+  <!-- Individual Balances Tab -->
+  <div *ngIf="activeTab === 'balances' && !loading" class="balances-section">
+    <div *ngIf="balances.length === 0" class="no-balances">
+      <p>No balance information available. Add some expenses to see balances!</p>
+    </div>
+
+    <div class="balances-grid" *ngIf="balances.length > 0">
+      <div class="balance-card" *ngFor="let balance of balances">
+        <div class="balance-header">
+          <div class="user-avatar">
+            {{balance.userName.charAt(0).toUpperCase()}}
+          </div>
+          <div class="user-info">
+            <h4>{{balance.userName}}</h4>
+            <span class="balance-status" [class]="getBalanceClass(balance.netBalance)">
+              {{getBalanceStatus(balance.netBalance)}}
+            </span>
+          </div>
+        </div>
+
+        <div class="balance-details">
+          <div class="balance-item">
+            <span class="label">Net Balance:</span>
+            <span class="amount" [class]="getBalanceClass(balance.netBalance)">
+              ${{balance.netBalance | number:'1.2-2'}}
+            </span>
+          </div>
+
+          <div class="balance-breakdown">
+            <div class="breakdown-item">
+              <span class="label">Total Owed to You:</span>
+              <span class="amount positive">
+                ${{balance.totalOwed | number:'1.2-2'}}
+              </span>
+            </div>
+            
+            <div class="breakdown-item">
+              <span class="label">Total You Owe:</span>
+              <span class="amount negative">
+                ${{balance.totalOwing | number:'1.2-2'}}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="balance-indicator">
+          <div class="indicator-bar">
+            <div class="indicator-fill" 
+                 [class]="getBalanceClass(balance.netBalance)"
+                 [style.width.%]="getBalanceWidth(balance.netBalance)">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Settlements Tab -->
+  <div *ngIf="activeTab === 'settlements' && !loading" class="settlements-section">
+    <div class="settlements-info">
+      <h3>💡 Suggested Settlements</h3>
+      <p>These are the minimum number of transactions needed to settle all debts in the group.</p>
+    </div>
+
+    <div *ngIf="simplifiedDebts.length === 0" class="no-settlements">
+      <div class="settled-message">
+        <h4>🎉 All Settled Up!</h4>
+        <p>Everyone in the group is settled up. No payments needed!</p>
+      </div>
+    </div>
+
+    <div class="settlements-list" *ngIf="simplifiedDebts.length > 0">
+      <div class="settlement-card" *ngFor="let debt of simplifiedDebts">
+        <div class="settlement-info">
+          <div class="settlement-flow">
+            <div class="payer">
+              <div class="user-avatar small">
+                {{debt.from.charAt(0).toUpperCase()}}
+              </div>
+              <span class="user-name">{{debt.from}}</span>
+            </div>
+            
+            <div class="flow-arrow">
+              <span class="arrow">→</span>
+              <span class="amount">${{debt.amount | number:'1.2-2'}}</span>
+            </div>
+            
+            <div class="payee">
+              <div class="user-avatar small">
+                {{debt.to.charAt(0).toUpperCase()}}
+              </div>
+              <span class="user-name">{{debt.to}}</span>
+            </div>
+          </div>
+        </div>
+        
+        <div class="settlement-actions">
+          <button class="btn-settle" (click)="settleDebt(debt)">
+            Mark as Settled
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="settlements-summary" *ngIf="simplifiedDebts.length > 0">
+      <div class="summary-card">
+        <h4>Settlement Summary</h4>
+        <p>
+          <strong>{{simplifiedDebts.length}}</strong> payment{{simplifiedDebts.length !== 1 ? 's' : ''}} 
+          needed to settle all debts
+        </p>
+        <p>
+          Total amount: <strong>${{getTotalDebtAmount() | number:'1.2-2'}}</strong>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

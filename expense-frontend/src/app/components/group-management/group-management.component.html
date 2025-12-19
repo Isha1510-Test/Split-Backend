@@ -1,0 +1,118 @@
+<div class="group-management">
+  <div class="header">
+    <h2>👥 Group Management</h2>
+    <button class="btn-primary" 
+            (click)="showCreateForm = !showCreateForm"
+            [disabled]="!currentUser">
+      {{ showCreateForm ? 'Cancel' : '+ Create Group' }}
+    </button>
+  </div>
+
+  <div *ngIf="!currentUser" class="no-user">
+    <p>Please select a user to manage groups</p>
+  </div>
+
+  <!-- Create Group Form -->
+  <div class="create-form" *ngIf="showCreateForm && currentUser">
+    <h3>Create New Group</h3>
+    <form (ngSubmit)="createGroup()" #groupForm="ngForm">
+      <div class="form-group">
+        <label for="groupName">Group Name</label>
+        <input 
+          type="text" 
+          id="groupName"
+          [(ngModel)]="newGroup.name" 
+          name="groupName"
+          required
+          placeholder="Enter group name">
+      </div>
+      
+      <div class="form-group">
+        <label for="description">Description (Optional)</label>
+        <textarea 
+          id="description"
+          [(ngModel)]="newGroup.description" 
+          name="description"
+          placeholder="Enter group description"
+          rows="3">
+        </textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Select Members</label>
+        <div class="members-selection">
+          <div class="member-item" *ngFor="let user of allUsers">
+            <label class="member-checkbox">
+              <input 
+                type="checkbox" 
+                [checked]="isMemberSelected(user.id!)"
+                (change)="toggleMember(user.id!)">
+              <span class="checkmark"></span>
+              <div class="member-info">
+                <span class="member-name">{{user.name}}</span>
+                <span class="member-username">&#64;{{user.username}}</span>
+              </div>
+            </label>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-actions">
+        <button type="submit" class="btn-primary" [disabled]="!groupForm.form.valid">
+          Create Group
+        </button>
+        <button type="button" class="btn-secondary" (click)="resetForm()">
+          Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Groups List -->
+  <div class="groups-section" *ngIf="currentUser">
+    <div *ngIf="loading" class="loading">
+      <p>Loading groups...</p>
+    </div>
+
+    <div *ngIf="!loading && groups.length === 0" class="no-groups">
+      <p>No groups found. Create the first group to get started!</p>
+    </div>
+
+    <div class="groups-grid" *ngIf="!loading && groups.length > 0">
+      <div class="group-card" *ngFor="let group of groups">
+        <div class="group-header">
+          <h4>{{group.name}}</h4>
+          <span class="member-count">{{group.members?.length || 0}} members</span>
+        </div>
+        
+        <div class="group-description" *ngIf="group.description">
+          {{group.description}}
+        </div>
+        
+        <div class="group-creator">
+          <span>Created by: {{group.createdByName}}</span>
+        </div>
+        
+        <div class="group-members" *ngIf="group.members && group.members.length > 0">
+          <h5>Members:</h5>
+          <div class="members-list">
+            <span class="member-tag" *ngFor="let member of group.members">
+              {{member.name}}
+            </span>
+          </div>
+        </div>
+        
+        <div class="group-actions">
+          <button class="btn-select" (click)="selectGroup(group)">
+            Select Group
+          </button>
+          <button class="btn-delete" 
+                  (click)="deleteGroup(group)"
+                  *ngIf="group.createdById === currentUser?.id">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

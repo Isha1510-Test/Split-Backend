@@ -1,0 +1,321 @@
+.expense-management {
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    h2 {
+      color: #333;
+      font-size: 2rem;
+      margin: 0;
+    }
+
+    .btn-primary {
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+
+      &:hover:not(:disabled) {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  .create-form {
+    background: #f9fafb;
+    padding: 2rem;
+    border-radius: 12px;
+    margin-bottom: 2rem;
+
+    h3 {
+      color: #333;
+      margin-bottom: 1.5rem;
+    }
+
+    .form-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .form-group {
+      label {
+        display: block;
+        color: #666;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+      }
+
+      input, select {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid #e5e7eb;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: border-color 0.3s ease;
+
+        &:focus {
+          outline: none;
+          border-color: #667eea;
+        }
+      }
+    }
+
+    .splits-section {
+      margin: 1.5rem 0;
+      padding: 1.5rem;
+      background: white;
+      border-radius: 8px;
+      border: 2px solid #e5e7eb;
+
+      h4 {
+        color: #333;
+        margin-bottom: 1rem;
+      }
+
+      .splits-grid {
+        display: grid;
+        gap: 1rem;
+
+        .split-item {
+          display: grid;
+          grid-template-columns: 1fr auto;
+          align-items: center;
+          gap: 1rem;
+          padding: 0.75rem;
+          background: #f9fafb;
+          border-radius: 6px;
+
+          .split-user {
+            font-weight: 600;
+            color: #333;
+          }
+
+          .split-amount, .split-percentage {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+
+            input {
+              width: 100px;
+              padding: 0.5rem;
+              border: 1px solid #d1d5db;
+              border-radius: 4px;
+            }
+          }
+
+          .split-display {
+            font-weight: 600;
+            color: #667eea;
+          }
+        }
+      }
+
+      .split-validation {
+        margin-top: 1rem;
+        padding: 0.75rem;
+        border-radius: 6px;
+
+        .validation-message {
+          font-weight: 600;
+
+          &.error {
+            background: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+          }
+
+          &.success {
+            background: #f0fdf4;
+            color: #16a34a;
+            border: 1px solid #bbf7d0;
+          }
+        }
+      }
+    }
+
+    .form-actions {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+
+      button {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+
+        &.btn-primary {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+
+          &:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+          }
+
+          &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+          }
+        }
+
+        &.btn-secondary {
+          background: #e5e7eb;
+          color: #666;
+
+          &:hover {
+            background: #d1d5db;
+          }
+        }
+      }
+    }
+  }
+
+  .expenses-section {
+    .loading, .no-expenses {
+      text-align: center;
+      padding: 3rem;
+      color: #666;
+      background: #f9fafb;
+      border-radius: 10px;
+    }
+
+    .expenses-list {
+      display: grid;
+      gap: 1.5rem;
+
+      .expense-card {
+        background: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+          border-color: #667eea;
+        }
+
+        .expense-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 1rem;
+
+          h4 {
+            color: #333;
+            margin: 0;
+            font-size: 1.25rem;
+          }
+
+          .expense-amount {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #667eea;
+          }
+        }
+
+        .expense-details {
+          .expense-info {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+
+            .paid-by, .split-type {
+              padding: 0.25rem 0.75rem;
+              border-radius: 20px;
+              font-size: 0.85rem;
+              font-weight: 500;
+            }
+
+            .paid-by {
+              background: #e0e7ff;
+              color: #667eea;
+            }
+
+            .split-type {
+              background: #f3e8ff;
+              color: #7c3aed;
+            }
+          }
+
+          .expense-splits {
+            h5 {
+              color: #333;
+              margin-bottom: 0.75rem;
+              font-size: 1rem;
+            }
+
+            .splits-list {
+              display: grid;
+              gap: 0.5rem;
+
+              .split-detail {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 0.5rem;
+                background: #f9fafb;
+                border-radius: 6px;
+
+                .split-user {
+                  font-weight: 500;
+                  color: #333;
+                }
+
+                .split-amount {
+                  font-weight: 600;
+                  color: #667eea;
+                }
+
+                .split-percentage {
+                  font-size: 0.85rem;
+                  color: #666;
+                }
+              }
+            }
+          }
+        }
+
+        .expense-actions {
+          margin-top: 1rem;
+          display: flex;
+          justify-content: flex-end;
+
+          .btn-delete {
+            padding: 0.5rem 1rem;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+
+            &:hover {
+              background: #dc2626;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,78 @@
+<div class="app-container" *ngIf="!isLoggedIn">
+  <app-login></app-login>
+</div>
+
+<div class="app-container" *ngIf="isLoggedIn">
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <h1>💰 {{title}}</h1>
+      <div class="user-info" *ngIf="currentUser">
+        <span>Welcome, {{currentUser.name}}!</span>
+        <button class="btn-logout" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="nav-tabs">
+    <button 
+      class="nav-tab" 
+      [class.active]="activeTab === 'dashboard'"
+      (click)="setActiveTab('dashboard')">
+      My Dashboard
+    </button>
+    <button 
+      class="nav-tab" 
+      [class.active]="activeTab === 'groups'"
+      (click)="setActiveTab('groups')">
+      Groups
+    </button>
+    <button 
+      class="nav-tab" 
+      [class.active]="activeTab === 'expenses'"
+      (click)="setActiveTab('expenses')"
+      [disabled]="!selectedGroup">
+      Expenses
+    </button>
+    <button 
+      class="nav-tab" 
+      [class.active]="activeTab === 'balances'"
+      (click)="setActiveTab('balances')"
+      [disabled]="!selectedGroup">
+      Balances
+    </button>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="main-content">
+    <!-- User Dashboard -->
+    <div *ngIf="activeTab === 'dashboard'" class="tab-content">
+      <app-user-dashboard [currentUser]="currentUser"></app-user-dashboard>
+    </div>
+
+    <!-- Groups Management -->
+    <div *ngIf="activeTab === 'groups'" class="tab-content">
+      <app-group-management 
+        [currentUser]="currentUser"
+        (groupSelected)="onGroupSelected($event)">
+      </app-group-management>
+    </div>
+
+    <!-- Expenses -->
+    <div *ngIf="activeTab === 'expenses' && selectedGroup" class="tab-content">
+      <app-expense-management 
+        [selectedGroup]="selectedGroup"
+        [currentUser]="currentUser">
+      </app-expense-management>
+    </div>
+
+    <!-- Balances -->
+    <div *ngIf="activeTab === 'balances' && selectedGroup" class="tab-content">
+      <app-balance-view 
+        [selectedGroup]="selectedGroup"
+        [currentUser]="currentUser">
+      </app-balance-view>
+    </div>
+  </main>
+</div>

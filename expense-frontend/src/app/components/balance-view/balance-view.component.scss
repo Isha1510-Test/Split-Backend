@@ -1,0 +1,360 @@
+.balance-view {
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    h2 {
+      color: #333;
+      font-size: 2rem;
+      margin: 0;
+    }
+
+    .btn-refresh {
+      padding: 0.75rem 1.5rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+      }
+    }
+  }
+
+  .tab-navigation {
+    display: flex;
+    margin-bottom: 2rem;
+    background: #f9fafb;
+    border-radius: 10px;
+    padding: 0.5rem;
+
+    .tab-button {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      background: none;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      color: #666;
+
+      &:hover {
+        background: rgba(102, 126, 234, 0.1);
+        color: #667eea;
+      }
+
+      &.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+      }
+    }
+  }
+
+  .loading {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+    background: #f9fafb;
+    border-radius: 10px;
+  }
+
+  .balances-section {
+    .no-balances {
+      text-align: center;
+      padding: 3rem;
+      color: #666;
+      background: #f9fafb;
+      border-radius: 10px;
+    }
+
+    .balances-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+      gap: 1.5rem;
+
+      .balance-card {
+        background: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 1.5rem;
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-5px);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+          border-color: #667eea;
+        }
+
+        .balance-header {
+          display: flex;
+          align-items: center;
+          margin-bottom: 1.5rem;
+
+          .user-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-right: 1rem;
+          }
+
+          .user-info {
+            h4 {
+              color: #333;
+              margin: 0 0 0.25rem 0;
+              font-size: 1.25rem;
+            }
+
+            .balance-status {
+              font-size: 0.9rem;
+              font-weight: 600;
+
+              &.positive { color: #10b981; }
+              &.negative { color: #ef4444; }
+              &.neutral { color: #6b7280; }
+            }
+          }
+        }
+
+        .balance-details {
+          .balance-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+
+            .label {
+              font-weight: 600;
+              color: #333;
+            }
+
+            .amount {
+              font-size: 1.25rem;
+              font-weight: 700;
+
+              &.positive { color: #10b981; }
+              &.negative { color: #ef4444; }
+              &.neutral { color: #6b7280; }
+            }
+          }
+
+          .balance-breakdown {
+            .breakdown-item {
+              display: flex;
+              justify-content: space-between;
+              align-items: center;
+              padding: 0.5rem 0;
+              border-bottom: 1px solid #f3f4f6;
+
+              &:last-child {
+                border-bottom: none;
+              }
+
+              .label {
+                color: #666;
+                font-size: 0.9rem;
+              }
+
+              .amount {
+                font-weight: 600;
+
+                &.positive { color: #10b981; }
+                &.negative { color: #ef4444; }
+              }
+            }
+          }
+        }
+
+        .balance-indicator {
+          margin-top: 1rem;
+
+          .indicator-bar {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            overflow: hidden;
+
+            .indicator-fill {
+              height: 100%;
+              transition: width 0.3s ease;
+
+              &.positive { background: #10b981; }
+              &.negative { background: #ef4444; }
+              &.neutral { background: #6b7280; }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .settlements-section {
+    .settlements-info {
+      text-align: center;
+      margin-bottom: 2rem;
+
+      h3 {
+        color: #333;
+        margin-bottom: 0.5rem;
+      }
+
+      p {
+        color: #666;
+      }
+    }
+
+    .no-settlements {
+      .settled-message {
+        text-align: center;
+        padding: 3rem;
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+        border-radius: 15px;
+
+        h4 {
+          margin-bottom: 1rem;
+          font-size: 1.5rem;
+        }
+
+        p {
+          font-size: 1.1rem;
+          opacity: 0.9;
+        }
+      }
+    }
+
+    .settlements-list {
+      display: grid;
+      gap: 1rem;
+      margin-bottom: 2rem;
+
+      .settlement-card {
+        background: white;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        padding: 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+
+        &:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+          border-color: #667eea;
+        }
+
+        .settlement-info {
+          flex: 1;
+
+          .settlement-flow {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+
+            .payer, .payee {
+              display: flex;
+              align-items: center;
+              gap: 0.5rem;
+
+              .user-avatar.small {
+                width: 40px;
+                height: 40px;
+                font-size: 1rem;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-weight: 700;
+              }
+
+              .user-name {
+                font-weight: 600;
+                color: #333;
+              }
+            }
+
+            .flow-arrow {
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              gap: 0.25rem;
+
+              .arrow {
+                font-size: 1.5rem;
+                color: #667eea;
+              }
+
+              .amount {
+                font-size: 1.1rem;
+                font-weight: 700;
+                color: #ef4444;
+              }
+            }
+          }
+        }
+
+        .settlement-actions {
+          .btn-settle {
+            padding: 0.75rem 1.5rem;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+
+            &:hover {
+              background: #059669;
+              transform: scale(1.05);
+            }
+          }
+        }
+      }
+    }
+
+    .settlements-summary {
+      .summary-card {
+        background: #f9fafb;
+        padding: 1.5rem;
+        border-radius: 12px;
+        text-align: center;
+
+        h4 {
+          color: #333;
+          margin-bottom: 1rem;
+        }
+
+        p {
+          color: #666;
+          margin-bottom: 0.5rem;
+
+          &:last-child {
+            margin-bottom: 0;
+          }
+        }
+      }
+    }
+  }
+}

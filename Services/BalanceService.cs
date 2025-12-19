@@ -1,0 +1,140 @@
+using Microsoft.EntityFrameworkCore;
+using ExpenseSharing.Data;
+using ExpenseSharing.Models;
+
+namespace ExpenseSharing.Services
+{
+    public class BalanceService
+    {
+        private readonly ExpenseSharingContext _context;
+
+        public BalanceService(ExpenseSharingContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<List<BalanceDto>> GetGroupBalancesAsync(int groupId)
+        {
+            var group = await _context.Groups
+                .Include(g => g.Members)
+                .FirstOrDefaultAsync(g => g.Id == groupId);
+
+            if (group == null) return new List<BalanceDto>();
+
+            var balances = new List<BalanceDto>();
+
+            foreach (var member in group.Members)
+            {
+                var balance = await CalculateUserBalanceAsync(member.Id, groupId);
+                balances.Add(balance);
+            }
+
+            return balances;
+        }
+
+        public async Task<BalanceDto> GetUserBalanceAsync(int userId, int groupId)
+        {
+            return await CalculateUserBalanceAsync(userId, groupId);
+        }
+
+        private async Task<BalanceDto> CalculateUserBalanceAsync(int userId, int groupId)
+        {
+            var user = await _context.Users.FindAsync(userId);
+            if (user == null) throw new ArgumentException("User not found");
+
+            // Calculate what user paid
+            var totalPaid = await _context.Expenses
+                .Where(e => e.PaidById == userId && e.GroupId == groupId)
+                .SumAsync(e => e.Amount);
+
+            // Calculate what user owes
+            var totalOwes = await _context.ExpenseSplits
+                .Include(es => es.Expense)
+                .Where(es => es.UserId == userId && es.Expense.GroupId == groupId)
+                .SumAsync(es => es.Amount);
+
+            // Calculate settlements
+            var settledAsPayer = await _context.Settlements
+                .Where(s => s.PayerId == userId && s.GroupId == groupId)
+                .SumAsync(s => s.Amount);
+
+            var settledAsPayee = await _context.Settlements
+                .Where(s => s.PayeeId == userId && s.GroupId == groupId)
+                .SumAsync(s => s.Amount);
+
+            // Net balance calculation
+            var netBalance = totalPaid - totalOwes + settledAsPayee - settledAsPayer;
+
+            return new BalanceDto
+            {
+                UserId = userId,
+                UserName = user.Name,
+                TotalOwed = netBalance > 0 ? netBalance : 0,
+                TotalOwing = netBalance < 0 ? Math.Abs(netBalance) : 0,
+                NetBalance = netBalance
+            };
+        }
+
+        public async Task<List<SimplifiedDebt>> GetSimplifiedDebtsAsync(int groupId)
+        {
+            var balances = await GetGroupBalancesAsync(groupId);
+            return SimplifyDebts(balances);
+        }
+
+        private List<SimplifiedDebt> SimplifyDebts(List<BalanceDto> balances)
+        {
+            var debts = new List<SimplifiedDebt>();
+
+            var creditors = balances
+                .Where(b => b.NetBalance > 0)
+                .OrderByDescending(b => b.NetBalance)
+                .ToList();
+
+            var debtors = balances
+                .Where(b => b.NetBalance < 0)
+                .OrderBy(b => b.NetBalance)
+                .ToList();
+
+            int i = 0, j = 0;
+            while (i < creditors.Count && j < debtors.Count)
+            {
+                var creditor = creditors[i];
+                var debtor = debtors[j];
+
+                var credit = creditor.NetBalance;
+                var debt = Math.Abs(debtor.NetBalance);
+
+                var settleAmount = Math.Min(credit, debt);
+
+                debts.Add(new SimplifiedDebt
+                {
+                    From = debtor.UserName,
+                    To = creditor.UserName,
+                    Amount = settleAmount
+                });
+
+                creditor.NetBalance -= settleAmount;
+                debtor.NetBalance += settleAmount;
+
+                if (creditor.NetBalance == 0) i++;
+                if (debtor.NetBalance == 0) j++;
+            }
+
+            return debts;
+        }
+
+        public async Task SettleBalanceAsync(int payerId, int payeeId, int groupId, decimal amount)
+        {
+            var settlement = new Settlement
+            {
+                PayerId = payerId,
+                PayeeId = payeeId,
+                GroupId = groupId,
+                Amount = amount
+            };
+
+            _context.Settlements.Add(settlement);
+            await _context.SaveChangesAsync();
+        }
+    }
+}

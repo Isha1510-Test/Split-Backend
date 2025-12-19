@@ -1,0 +1,171 @@
+.user-dashboard {
+  h2 {
+    color: #333;
+    margin-bottom: 2rem;
+    font-size: 2rem;
+  }
+
+  .loading {
+    text-align: center;
+    padding: 3rem;
+    color: #666;
+  }
+
+  .dashboard-content {
+    .balance-summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+
+      .summary-card {
+        padding: 2rem;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+        &.total-owed {
+          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+          color: white;
+        }
+
+        &.total-owing {
+          background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+          color: white;
+        }
+
+        &.net-balance {
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+        }
+
+        h3 {
+          font-size: 1rem;
+          margin-bottom: 1rem;
+          opacity: 0.9;
+        }
+
+        .amount {
+          font-size: 2.5rem;
+          font-weight: 700;
+
+          &.positive { color: #4ade80; }
+          &.negative { color: #f87171; }
+          &.neutral { color: white; }
+        }
+      }
+    }
+
+    .groups-breakdown {
+      margin-bottom: 3rem;
+
+      h3 {
+        color: #333;
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+      }
+
+      .no-groups {
+        text-align: center;
+        padding: 3rem;
+        color: #666;
+        background: #f9fafb;
+        border-radius: 10px;
+      }
+
+      .group-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+        gap: 1.5rem;
+
+        .group-balance-card {
+          background: white;
+          border: 2px solid #e5e7eb;
+          border-radius: 12px;
+          padding: 1.5rem;
+          transition: all 0.3s ease;
+
+          &:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+          }
+
+          .group-header {
+            margin-bottom: 1rem;
+
+            h4 {
+              color: #333;
+              font-size: 1.25rem;
+              margin: 0;
+            }
+          }
+
+          .group-balance {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            background: #f9fafb;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+
+            .balance-label {
+              color: #666;
+              font-size: 0.9rem;
+            }
+
+            .balance-amount {
+              font-weight: 700;
+              font-size: 1.1rem;
+
+              &.positive { color: #10b981; }
+              &.negative { color: #ef4444; }
+              &.neutral { color: #6b7280; }
+            }
+          }
+
+          .balance-status {
+            .status {
+              font-size: 0.9rem;
+              font-weight: 500;
+
+              &.positive { color: #10b981; }
+              &.negative { color: #ef4444; }
+              &.neutral { color: #6b7280; }
+            }
+          }
+        }
+      }
+    }
+
+    .quick-actions {
+      h3 {
+        color: #333;
+        margin-bottom: 1.5rem;
+        font-size: 1.5rem;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 1rem;
+
+        .action-btn {
+          padding: 0.75rem 1.5rem;
+          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          color: white;
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          font-weight: 600;
+          transition: all 0.3s ease;
+
+          &:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+          }
+        }
+      }
+    }
+  }
+}

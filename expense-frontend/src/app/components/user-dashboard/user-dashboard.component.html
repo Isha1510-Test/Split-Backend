@@ -1,0 +1,75 @@
+<div class="user-dashboard">
+  <h2>📊 My Financial Overview</h2>
+  
+  <div *ngIf="loading" class="loading">
+    <p>Loading your balance...</p>
+  </div>
+
+  <div *ngIf="!loading && userBalance" class="dashboard-content">
+    <!-- Overall Balance Summary -->
+    <div class="balance-summary">
+      <div class="summary-card total-owed" *ngIf="userBalance.totalOwed > 0">
+        <h3>💰 You are owed</h3>
+        <div class="amount positive">${{userBalance.totalOwed | number:'1.2-2'}}</div>
+      </div>
+      
+      <div class="summary-card total-owing" *ngIf="userBalance.totalOwing > 0">
+        <h3>💸 You owe</h3>
+        <div class="amount negative">${{userBalance.totalOwing | number:'1.2-2'}}</div>
+      </div>
+      
+      <div class="summary-card net-balance">
+        <h3>📈 Net Balance</h3>
+        <div class="amount" [class]="getBalanceClass(userBalance.netBalance)">
+          ${{userBalance.netBalance | number:'1.2-2'}}
+        </div>
+      </div>
+    </div>
+
+    <!-- Group Breakdown -->
+    <div class="groups-breakdown">
+      <h3>💼 Balance by Group</h3>
+      
+      <div *ngIf="userBalance.groupBalances.length === 0" class="no-groups">
+        <p>You're not part of any groups yet. Join or create a group to start tracking expenses!</p>
+      </div>
+
+      <div class="group-cards" *ngIf="userBalance.groupBalances.length > 0">
+        <div class="group-balance-card" *ngFor="let groupBalance of userBalance.groupBalances">
+          <div class="group-header">
+            <h4>{{groupBalance.groupName}}</h4>
+          </div>
+          
+          <div class="group-balance">
+            <span class="balance-label">Your balance:</span>
+            <span class="balance-amount" [class]="getBalanceClass(groupBalance.netBalance)">
+              ${{groupBalance.netBalance | number:'1.2-2'}}
+            </span>
+          </div>
+          
+          <div class="balance-status">
+            <span *ngIf="groupBalance.netBalance > 0" class="status positive">
+              Others owe you ${{groupBalance.netBalance | number:'1.2-2'}}
+            </span>
+            <span *ngIf="groupBalance.netBalance < 0" class="status negative">
+              You owe ${{getAbsoluteValue(groupBalance.netBalance) | number:'1.2-2'}}
+            </span>
+            <span *ngIf="groupBalance.netBalance === 0" class="status neutral">
+              All settled up! 🎉
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <h3>🚀 Quick Actions</h3>
+      <div class="action-buttons">
+        <button class="action-btn" (click)="loadUserBalance()">
+          🔄 Refresh Balance
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

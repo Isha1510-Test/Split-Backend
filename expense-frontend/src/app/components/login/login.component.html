@@ -1,0 +1,55 @@
+<div class="login-container">
+  <div class="login-card">
+    <h2>💰 Login to Expense Sharing</h2>
+    
+    <form (ngSubmit)="login()" #loginForm="ngForm">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input 
+          type="email" 
+          id="email"
+          [(ngModel)]="email" 
+          name="email"
+          required
+          placeholder="Enter your email">
+      </div>
+      
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input 
+          type="password" 
+          id="password"
+          [(ngModel)]="password" 
+          name="password"
+          required
+          placeholder="Enter your password">
+      </div>
+      
+      <div class="error" *ngIf="error">
+        {{error}}
+      </div>
+      
+      <button type="submit" class="btn-login" [disabled]="loading || !loginForm.form.valid">
+        {{loading ? 'Logging in...' : 'Login'}}
+      </button>
+    </form>
+    
+    <div class="quick-login">
+      <h3>Quick Login (Demo)</h3>
+      <div class="quick-buttons">
+        <button class="btn-quick" (click)="quickLogin('john123@gmail.com', 'john123')">
+          Login as John
+        </button>
+        <button class="btn-quick" (click)="quickLogin('jane123@gmail.com', 'jane123')">
+          Login as Jane
+        </button>
+        <button class="btn-quick" (click)="quickLogin('bob123@gmail.com', 'bob123')">
+          Login as Bob
+        </button>
+        <button class="btn-quick" (click)="quickLogin('alice123@gmail.com', 'alice123')">
+          Login as Alice
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
