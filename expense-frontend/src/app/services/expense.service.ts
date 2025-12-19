@@ -7,7 +7,7 @@ import { Expense, CreateExpenseRequest } from '../models/expense.model';
   providedIn: 'root'
 })
 export class ExpenseService {
-  private apiUrl = 'http://localhost:5000/api/expenses';
+  private apiUrl = 'https://split-backend-9wzm.onrender.com/api/expenses';
 
   constructor(private http: HttpClient) {}
 

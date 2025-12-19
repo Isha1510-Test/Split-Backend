@@ -87,22 +87,7 @@ namespace ExpenseSharing.Services
             };
         }
 
-        public async Task<UserBalanceDto> GetUserOverallBalanceAsync(int userId)
-        {
-            var user = await _context.Users.FindAsync(userId);
-            if (user == null) throw new ArgumentException("User not found");
 
-            // Simple implementation - just return empty balance for now
-            return new UserBalanceDto
-            {
-                UserId = userId,
-                UserName = user.Name,
-                TotalOwed = 0,
-                TotalOwing = 0,
-                NetBalance = 0,
-                GroupBalances = new List<GroupBalanceDto>()
-            };
-        }
 
 
     }

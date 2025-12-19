@@ -61,17 +61,10 @@ namespace ExpenseSharing.Controllers
         }
 
         [HttpGet("{id}/balance")]
-        public async Task<ActionResult<UserBalanceDto>> GetUserBalance(int id)
+        public async Task<ActionResult> GetUserBalance(int id)
         {
-            try
-            {
-                var balance = await _userService.GetUserOverallBalanceAsync(id);
-                return Ok(balance);
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(ex.Message);
-            }
+            // Temporarily disabled - return empty response
+            return Ok(new { message = "Balance feature coming soon" });
         }
     }
 }
