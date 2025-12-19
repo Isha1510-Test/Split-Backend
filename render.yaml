@@ -1,7 +1,7 @@
 services:
   - type: web
     name: splitwise-backend
-    env: dotnet
+    runtime: docker
     buildCommand: dotnet publish -c Release -o out
     startCommand: dotnet out/ExpenseSharing.dll
     envVars:
