@@ -25,4 +25,21 @@ namespace ExpenseSharing.Models
         public List<Expense> PaidExpenses { get; set; } = new();
         public List<ExpenseSplit> ExpenseSplits { get; set; } = new();
     }
+
+    public class UserBalanceDto
+    {
+        public int UserId { get; set; }
+        public string UserName { get; set; } = string.Empty;
+        public decimal TotalOwed { get; set; }
+        public decimal TotalOwing { get; set; }
+        public decimal NetBalance { get; set; }
+        public List<GroupBalanceDto> GroupBalances { get; set; } = new();
+    }
+
+    public class GroupBalanceDto
+    {
+        public int GroupId { get; set; }
+        public string GroupName { get; set; } = string.Empty;
+        public decimal NetBalance { get; set; }
+    }
 }
