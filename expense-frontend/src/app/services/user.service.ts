@@ -7,7 +7,7 @@ import { User, CreateUserRequest, LoginRequest, UserBalance } from '../models/us
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'http://localhost:5000/api/users';
+  private apiUrl = 'https://final-si50.onrender.com/api/users';
 
   constructor(private http: HttpClient) {}
 
