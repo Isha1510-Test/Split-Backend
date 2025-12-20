@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using ExpenseSharing.Models;
 using ExpenseSharing.Services;
+using Microsoft.EntityFrameworkCore;
+using ExpenseSharing.Data;
 
 namespace ExpenseSharing.Controllers
 {
@@ -9,10 +11,12 @@ namespace ExpenseSharing.Controllers
     public class UsersController : ControllerBase
     {
         private readonly UserService _userService;
+        private readonly ExpenseSharingContext _context;
 
-        public UsersController(UserService userService)
+        public UsersController(UserService userService, ExpenseSharingContext context)
         {
             _userService = userService;
+            _context = context;
         }
 
         [HttpGet]
@@ -60,11 +64,40 @@ namespace ExpenseSharing.Controllers
             return Ok(user);
         }
 
-        [HttpGet("{id}/balance")]
-        public async Task<ActionResult> GetUserBalance(int id)
+        [HttpGet("test")]
+        public async Task<ActionResult> TestEndpoint()
         {
-            // Temporarily disabled - return empty response
-            return Ok(new { message = "Balance feature coming soon" });
+            var userCount = await _context.Users.CountAsync();
+            var users = await _context.Users.Take(5).Select(u => new { u.Id, u.Name, u.Email }).ToListAsync();
+            return Ok(new { UserCount = userCount, Users = users });
+        }
+
+        [HttpGet("{id}/balance")]
+        public async Task<ActionResult<UserBalanceDto>> GetUserBalance(int id)
+        {
+            try
+            {
+                var balance = await _userService.GetUserOverallBalanceAsync(id);
+                return Ok(balance);
+            }
+            catch (Exception ex)
+            {
+                // Log the error
+                Console.WriteLine($"Error getting user balance for user {id}: {ex.Message}");
+                
+                // Return a default balance instead of error
+                var defaultBalance = new UserBalanceDto
+                {
+                    UserId = id,
+                    UserName = "Unknown User",
+                    TotalOwed = 0,
+                    TotalOwing = 0,
+                    NetBalance = 0,
+                    GroupBalances = new List<GroupBalanceDto>()
+                };
+                
+                return Ok(defaultBalance);
+            }
         }
     }
 }

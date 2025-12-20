@@ -43,27 +43,39 @@ namespace ExpenseSharing.Services
             if (user == null) throw new ArgumentException("User not found");
 
             // Calculate what user paid
-            var totalPaid = await _context.Expenses
+            var expenses = await _context.Expenses
                 .Where(e => e.PaidById == userId && e.GroupId == groupId)
-                .SumAsync(e => e.Amount);
+                .ToListAsync();
+            var totalPaid = expenses.Sum(e => e.Amount);
 
             // Calculate what user owes
-            var totalOwes = await _context.ExpenseSplits
+            var splits = await _context.ExpenseSplits
                 .Include(es => es.Expense)
                 .Where(es => es.UserId == userId && es.Expense.GroupId == groupId)
-                .SumAsync(es => es.Amount);
+                .ToListAsync();
+            var totalOwes = splits.Sum(es => es.Amount);
 
-            // Calculate settlements
-            var settledAsPayer = await _context.Settlements
+            // Calculate settlements - this is the key fix
+            // When user is payer (pays someone), it reduces what they owe
+            // When user is payee (receives payment), it reduces what others owe them
+            var settlementsAsPayer = await _context.Settlements
                 .Where(s => s.PayerId == userId && s.GroupId == groupId)
-                .SumAsync(s => s.Amount);
+                .ToListAsync();
+            var settledAsPayer = settlementsAsPayer.Sum(s => s.Amount);
 
-            var settledAsPayee = await _context.Settlements
+            var settlementsAsPayee = await _context.Settlements
                 .Where(s => s.PayeeId == userId && s.GroupId == groupId)
-                .SumAsync(s => s.Amount);
+                .ToListAsync();
+            var settledAsPayee = settlementsAsPayee.Sum(s => s.Amount);
 
-            // Net balance calculation
-            var netBalance = totalPaid - totalOwes + settledAsPayee - settledAsPayer;
+            // Correct settlement logic:
+            // Base balance = what I paid - what I owe
+            // If I pay someone (settledAsPayer): reduces my negative balance (less debt)
+            // If someone pays me (settledAsPayee): reduces my positive balance (less owed to me)
+            var baseBalance = totalPaid - totalOwes;
+            var netBalance = baseBalance + settledAsPayer - settledAsPayee;
+            
+            Console.WriteLine($"User {user.Name}: BaseBalance={baseBalance}, PaidOut={settledAsPayer}, Received={settledAsPayee}, NetBalance={netBalance}");
 
             return new BalanceDto
             {

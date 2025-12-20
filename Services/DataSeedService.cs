@@ -49,6 +49,55 @@ namespace ExpenseSharing.Services
 
             _context.Groups.AddRange(groups);
             await _context.SaveChangesAsync();
+
+            // Add sample expenses
+            var expenses = new List<Expense>
+            {
+                new Expense
+                {
+                    Description = "Groceries",
+                    Amount = 120.00m,
+                    PaidById = users[0].Id,
+                    GroupId = groups[0].Id,
+                    SplitType = SplitType.EQUAL,
+                    Splits = new List<ExpenseSplit>
+                    {
+                        new ExpenseSplit { UserId = users[0].Id, Amount = 40.00m },
+                        new ExpenseSplit { UserId = users[1].Id, Amount = 40.00m },
+                        new ExpenseSplit { UserId = users[2].Id, Amount = 40.00m }
+                    }
+                },
+                new Expense
+                {
+                    Description = "Electricity Bill",
+                    Amount = 90.00m,
+                    PaidById = users[1].Id,
+                    GroupId = groups[0].Id,
+                    SplitType = SplitType.EQUAL,
+                    Splits = new List<ExpenseSplit>
+                    {
+                        new ExpenseSplit { UserId = users[0].Id, Amount = 30.00m },
+                        new ExpenseSplit { UserId = users[1].Id, Amount = 30.00m },
+                        new ExpenseSplit { UserId = users[2].Id, Amount = 30.00m }
+                    }
+                },
+                new Expense
+                {
+                    Description = "Hotel Booking",
+                    Amount = 300.00m,
+                    PaidById = users[1].Id,
+                    GroupId = groups[1].Id,
+                    SplitType = SplitType.EQUAL,
+                    Splits = new List<ExpenseSplit>
+                    {
+                        new ExpenseSplit { UserId = users[1].Id, Amount = 150.00m },
+                        new ExpenseSplit { UserId = users[3].Id, Amount = 150.00m }
+                    }
+                }
+            };
+
+            _context.Expenses.AddRange(expenses);
+            await _context.SaveChangesAsync();
         }
     }
 }

@@ -51,11 +51,12 @@ using (var scope = app.Services.CreateScope())
     var context = scope.ServiceProvider.GetRequiredService<ExpenseSharingContext>();
     var seedService = scope.ServiceProvider.GetRequiredService<DataSeedService>();
     
-    // Delete and recreate database to add Password column
+    // Delete and recreate database to reset all data
     context.Database.EnsureDeleted();
     context.Database.EnsureCreated();
+    
     await seedService.SeedDataAsync();
 }
 
-app.Urls.Add($"http://0.0.0.0:{Environment.GetEnvironmentVariable("PORT") ?? "10000"}");
+app.Urls.Add($"http://0.0.0.0:{Environment.GetEnvironmentVariable("PORT") ?? "5000"}");
 app.Run();

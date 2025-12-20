@@ -1,0 +1,47 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseSharing", "ExpenseSharing.csproj", "{D3B930B5-A84B-1AF4-59FC-9F0ED7595A9B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "expense-frontend", "expense-frontend", "{6556EF7D-D8A3-2142-251A-877DB6009F8B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "node_modules", "node_modules", "{8CE306A5-221F-91D6-7A4B-793BA9421BDE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".cache", ".cache", "{BB94D302-190E-88A1-57CD-FE0C5E297FC0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "gh-pages", "gh-pages", "{CBC75206-FD38-1084-6482-50355168C923}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "https!github.com!Isha1510-Test!Split-Backend.git", "https!github.com!Isha1510-Test!Split-Backend.git", "{0E7BA087-1C6C-78BC-92B4-21B151419D57}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ExpenseSharing", "expense-frontend\node_modules\.cache\gh-pages\https!github.com!Isha1510-Test!Split-Backend.git\ExpenseSharing.csproj", "{E42B9C5D-4A14-590A-4530-6BA7D78BB3EB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D3B930B5-A84B-1AF4-59FC-9F0ED7595A9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3B930B5-A84B-1AF4-59FC-9F0ED7595A9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3B930B5-A84B-1AF4-59FC-9F0ED7595A9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3B930B5-A84B-1AF4-59FC-9F0ED7595A9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E42B9C5D-4A14-590A-4530-6BA7D78BB3EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E42B9C5D-4A14-590A-4530-6BA7D78BB3EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E42B9C5D-4A14-590A-4530-6BA7D78BB3EB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E42B9C5D-4A14-590A-4530-6BA7D78BB3EB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8CE306A5-221F-91D6-7A4B-793BA9421BDE} = {6556EF7D-D8A3-2142-251A-877DB6009F8B}
+		{BB94D302-190E-88A1-57CD-FE0C5E297FC0} = {8CE306A5-221F-91D6-7A4B-793BA9421BDE}
+		{CBC75206-FD38-1084-6482-50355168C923} = {BB94D302-190E-88A1-57CD-FE0C5E297FC0}
+		{0E7BA087-1C6C-78BC-92B4-21B151419D57} = {CBC75206-FD38-1084-6482-50355168C923}
+		{E42B9C5D-4A14-590A-4530-6BA7D78BB3EB} = {0E7BA087-1C6C-78BC-92B4-21B151419D57}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E4D44F4E-4A3B-423F-B93C-8DC4B423113B}
+	EndGlobalSection
+EndGlobal
