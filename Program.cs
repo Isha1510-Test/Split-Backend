@@ -55,5 +55,4 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Urls.Add($"http://0.0.0.0:{Environment.GetEnvironmentVariable("PORT") ?? "5000"}");
-app.Urls.Add("https://+:443");
 app.Run();
