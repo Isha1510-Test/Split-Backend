@@ -25,23 +25,19 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.WithOrigins("http://localhost:4200", "https://isha1510-test.github.io")
+        policy.AllowAnyOrigin()
               .AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowCredentials();
+              .AllowAnyMethod();
     });
 });
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseCors(); // Move CORS before other middleware
+app.UseSwagger();
+app.UseSwaggerUI();
 
-app.UseCors();
 app.UseAuthorization();
 app.MapControllers();
 
@@ -59,4 +55,5 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Urls.Add($"http://0.0.0.0:{Environment.GetEnvironmentVariable("PORT") ?? "5000"}");
+app.Urls.Add("https://+:443");
 app.Run();
