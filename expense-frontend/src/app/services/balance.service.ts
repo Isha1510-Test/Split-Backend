@@ -7,7 +7,7 @@ import { Balance, SimplifiedDebt } from '../models/balance.model';
   providedIn: 'root'
 })
 export class BalanceService {
-  private apiUrl = 'https://split-backend-9wzm.onrender.com/api/balances';
+  private apiUrl = 'http://localhost:5000/api/balances';
 
   constructor(private http: HttpClient) {}
 

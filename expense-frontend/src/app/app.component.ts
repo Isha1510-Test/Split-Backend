@@ -25,6 +25,19 @@ export class AppComponent implements OnInit {
     // Check if user is already logged in
     this.currentUser = this.userService.getCurrentUser();
     this.isLoggedIn = !!this.currentUser;
+    
+    // Listen for login events
+    if (!this.isLoggedIn) {
+      // Check periodically for login
+      const checkLogin = setInterval(() => {
+        const user = this.userService.getCurrentUser();
+        if (user) {
+          this.currentUser = user;
+          this.isLoggedIn = true;
+          clearInterval(checkLogin);
+        }
+      }, 1000);
+    }
   }
 
   onUserSelected(user: User) {

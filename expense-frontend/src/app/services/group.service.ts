@@ -7,7 +7,7 @@ import { Group, CreateGroupRequest } from '../models/group.model';
   providedIn: 'root'
 })
 export class GroupService {
-  private apiUrl = 'https://split-backend-9wzm.onrender.com/api/groups';
+  private apiUrl = 'http://localhost:5000/api/groups';
 
   constructor(private http: HttpClient) {}
 

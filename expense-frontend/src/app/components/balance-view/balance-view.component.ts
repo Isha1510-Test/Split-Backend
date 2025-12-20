@@ -74,6 +74,9 @@ export class BalanceViewComponent implements OnInit, OnChanges {
       this.balanceService.settleBalance(payer.id!, payee.id!, this.selectedGroup.id!, debt.amount).subscribe({
         next: () => {
           alert('Settlement recorded successfully!');
+          // Remove the settled debt from the list immediately
+          this.simplifiedDebts = this.simplifiedDebts.filter(d => d !== debt);
+          // Reload all data to get updated balances
           this.loadBalances();
         },
         error: (error) => {

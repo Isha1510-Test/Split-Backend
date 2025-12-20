@@ -7,7 +7,7 @@ import { User, CreateUserRequest, LoginRequest, UserBalance } from '../models/us
   providedIn: 'root'
 })
 export class UserService {
-  private apiUrl = 'https://split-backend-9wzm.onrender.com/api/users';
+  private apiUrl = 'http://localhost:5000/api/users';
 
   constructor(private http: HttpClient) {}
 

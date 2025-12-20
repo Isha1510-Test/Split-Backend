@@ -1,75 +1,140 @@
 <div class="user-dashboard">
-  <h2>📊 My Financial Overview</h2>
+  <div class="dashboard-header">
+    <h2>💰 Dashboard</h2>
+    <p class="welcome-text">Welcome back, {{currentUser?.name}}!</p>
+  </div>
   
-  <div *ngIf="loading" class="loading">
-    <p>Loading your balance...</p>
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading your financial overview...</p>
   </div>
 
-  <div *ngIf="!loading && userBalance" class="dashboard-content">
-    <!-- Overall Balance Summary -->
-    <div class="balance-summary">
-      <div class="summary-card total-owed" *ngIf="userBalance.totalOwed > 0">
-        <h3>💰 You are owed</h3>
-        <div class="amount positive">${{userBalance.totalOwed | number:'1.2-2'}}</div>
-      </div>
-      
-      <div class="summary-card total-owing" *ngIf="userBalance.totalOwing > 0">
-        <h3>💸 You owe</h3>
-        <div class="amount negative">${{userBalance.totalOwing | number:'1.2-2'}}</div>
-      </div>
-      
-      <div class="summary-card net-balance">
-        <h3>📈 Net Balance</h3>
-        <div class="amount" [class]="getBalanceClass(userBalance.netBalance)">
-          ${{userBalance.netBalance | number:'1.2-2'}}
+  <div *ngIf="!loading && userBalance" class="dashboard-grid">
+    <!-- Financial Summary Cards -->
+    <div class="summary-section">
+      <div class="summary-cards">
+        <div class="summary-card positive" *ngIf="userBalance.totalOwed > 0">
+          <div class="card-icon">💰</div>
+          <div class="card-content">
+            <h3>${{userBalance.totalOwed | number:'1.2-2'}}</h3>
+            <p>You are owed</p>
+          </div>
+        </div>
+        
+        <div class="summary-card negative" *ngIf="userBalance.totalOwing > 0">
+          <div class="card-icon">💸</div>
+          <div class="card-content">
+            <h3>${{userBalance.totalOwing | number:'1.2-2'}}</h3>
+            <p>You owe</p>
+          </div>
+        </div>
+        
+        <div class="summary-card" [class]="getBalanceClass(userBalance.netBalance)">
+          <div class="card-icon">📊</div>
+          <div class="card-content">
+            <h3>${{userBalance.netBalance | number:'1.2-2'}}</h3>
+            <p>Net Balance</p>
+          </div>
+        </div>
+        
+        <div class="summary-card info">
+          <div class="card-icon">👥</div>
+          <div class="card-content">
+            <h3>{{userBalance.groupBalances.length}}</h3>
+            <p>Active Groups</p>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- Group Breakdown -->
-    <div class="groups-breakdown">
-      <h3>💼 Balance by Group</h3>
-      
-      <div *ngIf="userBalance.groupBalances.length === 0" class="no-groups">
-        <p>You're not part of any groups yet. Join or create a group to start tracking expenses!</p>
+    <!-- Groups Overview -->
+    <div class="groups-section" *ngIf="userBalance.groupBalances.length > 0">
+      <div class="section-header">
+        <h3>Your Groups</h3>
+        <button class="btn-secondary" (click)="navigateToTab('groups')">
+          Manage Groups
+        </button>
       </div>
-
-      <div class="group-cards" *ngIf="userBalance.groupBalances.length > 0">
-        <div class="group-balance-card" *ngFor="let groupBalance of userBalance.groupBalances">
-          <div class="group-header">
-            <h4>{{groupBalance.groupName}}</h4>
+      
+      <div class="groups-list">
+        <div class="group-item" *ngFor="let groupBalance of userBalance.groupBalances">
+          <div class="group-info">
+            <div class="group-avatar">{{groupBalance.groupName.charAt(0)}}</div>
+            <div class="group-details">
+              <h4>{{groupBalance.groupName}}</h4>
+              <p class="balance-status" [class]="getBalanceClass(groupBalance.netBalance)">
+                <span *ngIf="groupBalance.netBalance > 0">You are owed ${{groupBalance.netBalance | number:'1.2-2'}}</span>
+                <span *ngIf="groupBalance.netBalance < 0">You owe ${{getAbsoluteValue(groupBalance.netBalance) | number:'1.2-2'}}</span>
+                <span *ngIf="groupBalance.netBalance === 0">All settled up</span>
+              </p>
+            </div>
           </div>
-          
-          <div class="group-balance">
-            <span class="balance-label">Your balance:</span>
-            <span class="balance-amount" [class]="getBalanceClass(groupBalance.netBalance)">
-              ${{groupBalance.netBalance | number:'1.2-2'}}
-            </span>
-          </div>
-          
-          <div class="balance-status">
-            <span *ngIf="groupBalance.netBalance > 0" class="status positive">
-              Others owe you ${{groupBalance.netBalance | number:'1.2-2'}}
-            </span>
-            <span *ngIf="groupBalance.netBalance < 0" class="status negative">
-              You owe ${{getAbsoluteValue(groupBalance.netBalance) | number:'1.2-2'}}
-            </span>
-            <span *ngIf="groupBalance.netBalance === 0" class="status neutral">
-              All settled up! 🎉
-            </span>
+          <div class="group-balance" [class]="getBalanceClass(groupBalance.netBalance)">
+            ${{groupBalance.netBalance | number:'1.2-2'}}
           </div>
         </div>
       </div>
     </div>
 
     <!-- Quick Actions -->
-    <div class="quick-actions">
-      <h3>🚀 Quick Actions</h3>
-      <div class="action-buttons">
-        <button class="action-btn" (click)="loadUserBalance()">
-          🔄 Refresh Balance
+    <div class="actions-section">
+      <div class="section-header">
+        <h3>Quick Actions</h3>
+      </div>
+      <div class="action-grid">
+        <button class="action-card" (click)="navigateToTab('groups')">
+          <div class="action-icon">👥</div>
+          <div class="action-text">
+            <h4>Create Group</h4>
+            <p>Start a new expense group</p>
+          </div>
+        </button>
+        
+        <button class="action-card" (click)="navigateToTab('expenses')">
+          <div class="action-icon">💰</div>
+          <div class="action-text">
+            <h4>Add Expense</h4>
+            <p>Record a new expense</p>
+          </div>
+        </button>
+        
+        <button class="action-card" (click)="navigateToTab('balances')">
+          <div class="action-icon">⚖️</div>
+          <div class="action-text">
+            <h4>View Balances</h4>
+            <p>Check who owes what</p>
+          </div>
+        </button>
+        
+        <button class="action-card" (click)="loadUserBalance()">
+          <div class="action-icon">🔄</div>
+          <div class="action-text">
+            <h4>Refresh</h4>
+            <p>Update your data</p>
+          </div>
         </button>
       </div>
     </div>
+
+    <!-- Getting Started (only if no groups) -->
+    <div class="getting-started" *ngIf="userBalance.groupBalances.length === 0">
+      <div class="empty-state">
+        <div class="empty-icon">🚀</div>
+        <h3>Ready to start splitting expenses?</h3>
+        <p>Create your first group to begin tracking shared expenses with friends, roommates, or colleagues.</p>
+        <button class="btn-primary" (click)="navigateToTab('groups')">
+          Create Your First Group
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!loading && !userBalance" class="error-state">
+    <div class="error-icon">⚠️</div>
+    <h3>Unable to Load Dashboard</h3>
+    <p>We're having trouble loading your data. Please check your connection and try again.</p>
+    <button class="btn-primary" (click)="loadUserBalance()">
+      Try Again
+    </button>
   </div>
 </div>

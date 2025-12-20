@@ -31,15 +31,13 @@
     <button 
       class="nav-tab" 
       [class.active]="activeTab === 'expenses'"
-      (click)="setActiveTab('expenses')"
-      [disabled]="!selectedGroup">
+      (click)="setActiveTab('expenses')">
       Expenses
     </button>
     <button 
       class="nav-tab" 
       [class.active]="activeTab === 'balances'"
-      (click)="setActiveTab('balances')"
-      [disabled]="!selectedGroup">
+      (click)="setActiveTab('balances')">
       Balances
     </button>
   </nav>
@@ -48,7 +46,10 @@
   <main class="main-content">
     <!-- User Dashboard -->
     <div *ngIf="activeTab === 'dashboard'" class="tab-content">
-      <app-user-dashboard [currentUser]="currentUser"></app-user-dashboard>
+      <app-user-dashboard 
+        [currentUser]="currentUser"
+        (tabChanged)="setActiveTab($event)">
+      </app-user-dashboard>
     </div>
 
     <!-- Groups Management -->
@@ -60,7 +61,7 @@
     </div>
 
     <!-- Expenses -->
-    <div *ngIf="activeTab === 'expenses' && selectedGroup" class="tab-content">
+    <div *ngIf="activeTab === 'expenses'" class="tab-content">
       <app-expense-management 
         [selectedGroup]="selectedGroup"
         [currentUser]="currentUser">
@@ -68,7 +69,7 @@
     </div>
 
     <!-- Balances -->
-    <div *ngIf="activeTab === 'balances' && selectedGroup" class="tab-content">
+    <div *ngIf="activeTab === 'balances'" class="tab-content">
       <app-balance-view 
         [selectedGroup]="selectedGroup"
         [currentUser]="currentUser">

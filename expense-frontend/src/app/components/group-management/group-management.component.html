@@ -107,8 +107,7 @@
             Select Group
           </button>
           <button class="btn-delete" 
-                  (click)="deleteGroup(group)"
-                  *ngIf="group.createdById === currentUser?.id">
+                  (click)="deleteGroup(group)">
             Delete
           </button>
         </div>

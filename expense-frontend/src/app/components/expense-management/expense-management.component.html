@@ -1,6 +1,20 @@
 <div class="expense-management">
+  <!-- No Group Selected Message -->
+  <div *ngIf="!selectedGroup" class="no-group-selected">
+    <div class="message-card">
+      <div class="message-icon">🏷️</div>
+      <h3>Select a Group First</h3>
+      <p>Please go to the <strong>Groups</strong> tab and select a group to manage expenses.</p>
+      <button class="btn-primary" onclick="document.querySelector('.nav-tab:nth-child(2)').click()">
+        Go to Groups Tab
+      </button>
+    </div>
+  </div>
+
+  <!-- Expense Management Content -->
+  <div *ngIf="selectedGroup">
   <div class="header">
-    <h2>💰 Expenses - {{selectedGroup?.name}}</h2>
+    <h2>💰 Expenses - {{selectedGroup.name}}</h2>
     <button class="btn-primary" 
             (click)="showCreateForm = !showCreateForm"
             [disabled]="!selectedGroup || !currentUser">
@@ -171,8 +185,7 @@
         
         <div class="expense-actions">
           <button class="btn-delete" 
-                  (click)="deleteExpense(expense)"
-                  *ngIf="expense.paidById === currentUser?.id">
+                  (click)="deleteExpense(expense)">
             Delete
           </button>
         </div>

@@ -83,6 +83,7 @@ body {
   font-weight: 500;
   transition: all 0.3s ease;
   color: #666;
+  font-size: 0.95rem;
 }
 
 .nav-tab:hover:not(:disabled) {
@@ -96,9 +97,11 @@ body {
   box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
 }
 
-.nav-tab:disabled {
-  opacity: 0.5;
+.nav-tab:disabled,
+.nav-tab.disabled {
+  opacity: 0.4;
   cursor: not-allowed;
+  color: #999;
 }
 
 /* Main Content */

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { User, UserBalance } from '../../models/user.model';
 import { UserService } from '../../services/user.service';
 
@@ -9,6 +9,7 @@ import { UserService } from '../../services/user.service';
 })
 export class UserDashboardComponent implements OnInit {
   @Input() currentUser: User | null = null;
+  @Output() tabChanged = new EventEmitter<string>();
   
   userBalance: UserBalance | null = null;
   loading = false;
@@ -30,6 +31,15 @@ export class UserDashboardComponent implements OnInit {
       },
       error: (error) => {
         console.error('Error loading balance:', error);
+        // Set default values on error
+        this.userBalance = {
+          userId: this.currentUser!.id!,
+          userName: this.currentUser!.name,
+          totalOwed: 0,
+          totalOwing: 0,
+          netBalance: 0,
+          groupBalances: []
+        };
         this.loading = false;
       }
     });
@@ -43,5 +53,9 @@ export class UserDashboardComponent implements OnInit {
 
   getAbsoluteValue(value: number): number {
     return Math.abs(value);
+  }
+
+  navigateToTab(tab: string) {
+    this.tabChanged.emit(tab);
   }
 }
